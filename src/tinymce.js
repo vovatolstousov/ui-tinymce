@@ -14,7 +14,13 @@ angular.module('ui.tinymce', [])
     return {
       require: ['ngModel', '^?form'],
       priority: 599,
+      scope: {
+        options: '='
+      },
       link: function(scope, element, attrs, ctrls) {
+        if (scope.options){
+          angular.extend(uiTinymceConfig, scope.options);
+        }
         if (!$window.tinymce) {
           return;
         }
@@ -60,8 +66,8 @@ angular.module('ui.tinymce', [])
         var debouncedUpdate = (function(debouncedUpdateDelay) {
           var debouncedUpdateTimer;
           return function(ed) {
-	        $timeout.cancel(debouncedUpdateTimer);
-	         debouncedUpdateTimer = $timeout(function() {
+          $timeout.cancel(debouncedUpdateTimer);
+           debouncedUpdateTimer = $timeout(function() {
               return (function(ed) {
                 if (ed.isDirty()) {
                   ed.save();
